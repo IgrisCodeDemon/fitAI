@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitAI - Smart Clothing Size & Style Advisor</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-wrap">
+                <span class="logo-icon">🧵</span>
+                <span class="logo-text">FitAI</span>
+            </div>
+            <p class="subtitle">AI-Powered Body Measurement & Smart Style Recommendations</p>
+        </header>
+
+        <div class="demo-notice">
+            <strong>🎉 Demo Mode:</strong> This is a fully functional demo using mock AI results. 
+            Free tier - Limited to 3 scans per day. Upgrade for unlimited access!
+        </div>
+
+        <section class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📸</div>
+                <h3>Upload a photo (front view works best)</h3>
+                <p>Stand straight, full body visible, good lighting</p>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+            <button class="btn" id="analyzeBtn" disabled>Analyze My Measurements</button>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>AI is analyzing your body measurements...</p>
+            </div>
+        </section>
+
+        <section class="results" id="results">
+            <div class="measurements">
+                <h2>📏 Your Body Measurements</h2>
+                <div class="measurement-grid" id="measurementsGrid">
+                    <!-- Measurements populated by JS -->
+                </div>
+            </div>
+
+            <h2>💳 Plans & Pricing</h2>
+            <div class="tiers">
+                <div class="tier-card">
+                    <h3>Free Tier</h3>
+                    <p><strong>3 scans/day</strong></p>
+                    <p>Non-commercial use only</p>
+                    <p>Core size & fit suggestions</p>
+                    <button class="btn">Current Plan</button>
+                </div>
+                <div class="tier-card tier-pro">
+                    <h3>Pro Tier</h3>
+                    <p><strong>Unlimited scans</strong></p>
+                    <p>Non-commercial personal use</p>
+                    <p>Advanced styling insights</p>
+                    <button class="btn">Upgrade</button>
+                </div>
+                <div class="tier-card tier-enterprise">
+                    <h3>Commercial</h3>
+                    <p><strong>Custom pricing</strong></p>
+                    <p>High-volume & API access</p>
+                    <p>For retailers & platforms</p>
+                    <button class="btn">Contact Sales</button>
+                </div>
+            </div>
+
+            <h2>👗 Outfits For Every Occasion</h2>
+            <p class="outfit-note">Outfits are generated using mocked AI logic for this demo.</p>
+            <div class="outfits-grid" id="outfitsGrid">
+                <!-- Outfits populated by JS -->
+            </div>
+        </section>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
