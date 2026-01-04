@@ -433,10 +433,6 @@ body {
   color: var(--text-soft);
 }
 
-.accuracy-shell .section-header p {
-  color: var(--text-soft);
-}
-
 .accuracy-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -817,4 +813,3 @@ body {
     grid-template-columns: minmax(0, 1fr);
   }
 }
-
