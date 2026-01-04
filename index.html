@@ -1,81 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitAI - Smart Clothing Size & Style Advisor</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitAI | Intelligent Body Measurement & Style Platform</title>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo-wrap">
-                <span class="logo-icon">🧵</span>
-                <span class="logo-text">FitAI</span>
-            </div>
-            <p class="subtitle">AI-Powered Body Measurement & Smart Style Recommendations</p>
-        </header>
+  <header class="site-header">
+    <div class="shell header-shell">
+      <div class="branding">
+        <div class="logo-mark">FA</div>
+        <div class="brand-text">
+          <div class="brand-name">FitAI</div>
+          <div class="brand-tagline">Intelligent Size & Style Engine</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#how-it-works">How it works</a>
+        <a href="#demo">Live demo</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#api">Commercial</a>
+      </nav>
+      <div class="nav-cta">
+        <a href="#demo" class="btn btn-ghost">Try demo</a>
+        <a href="#pricing" class="btn btn-primary">Get started</a>
+      </div>
+    </div>
+  </header>
 
-        <div class="demo-notice">
-            <strong>🎉 Demo Mode:</strong> This is a fully functional demo using mock AI results. 
-            Free tier - Limited to 3 scans per day. Upgrade for unlimited access!
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="shell hero-shell">
+        <div class="hero-copy">
+          <span class="eyebrow">Virtual fitting, made real</span>
+          <h1>Measure any body from a photo. Recommend the perfect fit in seconds.</h1>
+          <p class="hero-sub">
+            FitAI turns simple camera shots into precise measurements and smart outfit
+            guidance for every occasion, powered by computer vision and style intelligence
+            (demo mode with mock AI results).
+          </p>
+          <div class="hero-actions">
+            <a href="#demo" class="btn btn-primary">Launch interactive demo</a>
+            <a href="#how-it-works" class="btn btn-ghost">See how it works</a>
+          </div>
+          <div class="hero-highlights">
+            <div class="hero-pill">Body measurements from images</div>
+            <div class="hero-pill">Occasion & formality-aware outfits</div>
+            <div class="hero-pill">API-ready for retailers</div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card">
+            <img src="assets/fitai-hero.png" alt="FitAI measurement and style illustration" class="hero-illustration" />
+            <div class="hero-overlay">
+              <div class="overlay-metric">
+                <span class="metric-label">Detected size</span>
+                <span class="metric-value">M</span>
+              </div>
+              <div class="overlay-metric">
+                <span class="metric-label">Confidence</span>
+                <span class="metric-value">94%</span>
+              </div>
+              <div class="overlay-metric">
+                <span class="metric-label">Recommended fit</span>
+                <span class="metric-value">Tailored</span>
+              </div>
+            </div>
+          </div>
+          <p class="hero-note">
+            This environment runs in demo mode. All measurements and outfits are generated with
+            placeholder logic so you can validate flows before integrating real AI.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="section section-alt">
+      <div class="shell">
+        <div class="section-header">
+          <h2>How FitAI works</h2>
+          <p>
+            A simple three-step flow that you can embed into your website, app, or in‑store kiosks.
+          </p>
+        </div>
+        <div class="steps-grid">
+          <article class="step-card">
+            <div class="step-number">01</div>
+            <h3>Capture or upload</h3>
+            <p>
+              Users upload full‑body photos from multiple angles using a phone or in‑store camera,
+              with visual guidance for posture and lighting.
+            </p>
+          </article>
+          <article class="step-card">
+            <div class="step-number">02</div>
+            <h3>Measure with vision</h3>
+            <p>
+              Your AI engine detects landmarks, builds body proportions, and estimates key
+              measurements for tops, bottoms, and dresses.
+            </p>
+          </article>
+          <article class="step-card">
+            <div class="step-number">03</div>
+            <h3>Recommend sizes & looks</h3>
+            <p>
+              FitAI maps measurements to size charts and style rules to propose fits, occasions,
+              and what to lean into or avoid.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEMO -->
+    <section id="demo" class="section">
+      <div class="shell">
+        <div class="section-header">
+          <h2>Try the interactive demo</h2>
+          <p>
+            Upload a photo, let the mock AI estimate your measurements, and explore outfit ideas
+            for work, weekends, and events.
+          </p>
         </div>
 
-        <section class="upload-section">
-            <div class="upload-area" id="uploadArea">
+        <div class="demo-layout">
+          <div class="demo-left">
+            <div class="demo-panel">
+              <div class="panel-header">
+                <h3>Upload a photo</h3>
+                <p>Front view works best. Use a sample image if you prefer.</p>
+              </div>
+              <div class="upload-area" id="uploadArea">
                 <div class="upload-icon">📸</div>
-                <h3>Upload a photo (front view works best)</h3>
-                <p>Stand straight, full body visible, good lighting</p>
-                <input type="file" id="fileInput" accept="image/*">
-            </div>
-            <button class="btn" id="analyzeBtn" disabled>Analyze My Measurements</button>
-            <div class="loading" id="loading">
+                <h4>Drag & drop or click to upload</h4>
+                <p class="upload-help">
+                  Stand straight, full body visible, neutral background. For this demo you
+                  can use any portrait‑style image.
+                </p>
+                <input type="file" id="fileInput" accept="image/*" />
+              </div>
+              <div class="demo-actions">
+                <button class="btn btn-primary" id="analyzeBtn" disabled>
+                  Analyze measurements
+                </button>
+                <button class="btn btn-ghost" id="sampleBtn">
+                  Use sample model
+                </button>
+              </div>
+              <div class="demo-meta">
+                <span id="scanCounter">Free tier: 0 / 3 scans used today</span>
+              </div>
+              <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p>AI is analyzing your body measurements...</p>
+                <p>Analyzing body landmarks, proportions, and style profile…</p>
+              </div>
             </div>
-        </section>
+            <div class="demo-panel secondary">
+              <div class="panel-header">
+                <h3>Tier overview</h3>
+                <p>Choose the right plan for your usage and licensing needs.</p>
+              </div>
+              <div class="tiers-grid" id="pricing">
+                <article class="tier-card">
+                  <h4>Free</h4>
+                  <p class="tier-price">₹0 / month</p>
+                  <ul class="tier-list">
+                    <li>Up to 3 scans per day</li>
+                    <li>Personal, non‑commercial use</li>
+                    <li>Core size suggestions</li>
+                    <li>Basic outfit templates</li>
+                  </ul>
+                  <button class="btn btn-ghost small">Current plan</button>
+                </article>
+                <article class="tier-card tier-pro">
+                  <h4>Pro</h4>
+                  <p class="tier-price">From ₹799 / month</p>
+                  <ul class="tier-list">
+                    <li>Unlimited scans</li>
+                    <li>Advanced measurement tuning</li>
+                    <li>Occasion‑aware styling</li>
+                    <li>Email support</li>
+                  </ul>
+                  <button class="btn btn-primary small">Talk to us</button>
+                </article>
+                <article class="tier-card tier-enterprise">
+                  <h4>Commercial</h4>
+                  <p class="tier-price">Custom</p>
+                  <ul class="tier-list">
+                    <li>Full commercial licensing</li>
+                    <li>Store & e‑commerce integration</li>
+                    <li>API & SDK access</li>
+                    <li>Dedicated success manager</li>
+                  </ul>
+                  <button class="btn btn-primary small">Book a call</button>
+                </article>
+              </div>
+            </div>
+          </div>
 
-        <section class="results" id="results">
-            <div class="measurements">
-                <h2>📏 Your Body Measurements</h2>
-                <div class="measurement-grid" id="measurementsGrid">
-                    <!-- Measurements populated by JS -->
-                </div>
+          <div class="demo-right">
+            <div class="demo-panel">
+              <div class="panel-header">
+                <h3>Measurements & fit profile</h3>
+                <p>These values are generated by mock logic for demonstration.</p>
+              </div>
+              <div class="measurement-summary" id="measurementSummary">
+                <p>No scan yet. Upload a photo and run an analysis to see results.</p>
+              </div>
+              <div class="measurement-grid" id="measurementsGrid"></div>
             </div>
 
-            <h2>💳 Plans & Pricing</h2>
-            <div class="tiers">
-                <div class="tier-card">
-                    <h3>Free Tier</h3>
-                    <p><strong>3 scans/day</strong></p>
-                    <p>Non-commercial use only</p>
-                    <p>Core size & fit suggestions</p>
-                    <button class="btn">Current Plan</button>
-                </div>
-                <div class="tier-card tier-pro">
-                    <h3>Pro Tier</h3>
-                    <p><strong>Unlimited scans</strong></p>
-                    <p>Non-commercial personal use</p>
-                    <p>Advanced styling insights</p>
-                    <button class="btn">Upgrade</button>
-                </div>
-                <div class="tier-card tier-enterprise">
-                    <h3>Commercial</h3>
-                    <p><strong>Custom pricing</strong></p>
-                    <p>High-volume & API access</p>
-                    <p>For retailers & platforms</p>
-                    <button class="btn">Contact Sales</button>
-                </div>
+            <div class="demo-panel secondary">
+              <div class="panel-header">
+                <h3>Outfit recommendations</h3>
+                <p>Explore outfits by occasion and formality level.</p>
+              </div>
+              <div class="outfit-filters">
+                <button class="chip active" data-filter="all">All</button>
+                <button class="chip" data-filter="Work">Work</button>
+                <button class="chip" data-filter="Evening">Evening</button>
+                <button class="chip" data-filter="Weekend">Weekend</button>
+                <button class="chip" data-filter="Event">Events</button>
+              </div>
+              <div class="outfits-grid" id="outfitsGrid"></div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <h2>👗 Outfits For Every Occasion</h2>
-            <p class="outfit-note">Outfits are generated using mocked AI logic for this demo.</p>
-            <div class="outfits-grid" id="outfitsGrid">
-                <!-- Outfits populated by JS -->
-            </div>
-        </section>
+    <!-- API / COMMERCIAL -->
+    <section id="api" class="section section-alt">
+      <div class="shell api-shell">
+        <div class="api-copy">
+          <div class="section-header">
+            <h2>Built for commercial scale</h2>
+            <p>
+              Use FitAI as a plug‑in for your brand or platform, from boutiques to marketplaces.
+            </p>
+          </div>
+          <ul class="feature-list">
+            <li>Drop‑in widget for e‑commerce product pages</li>
+            <li>Headless API for mobile and in‑store kiosks</li>
+            <li>Custom size charts per brand, region, and garment type</li>
+            <li>Analytics on fit confidence and conversion impact</li>
+          </ul>
+          <a href="#pricing" class="btn btn-primary">Discuss commercial usage</a>
+        </div>
+        <div class="api-card">
+          <h3>Example API response (demo)</h3>
+          <pre class="code-block">
+{
+  "height_cm": 174,
+  "chest_cm": 96,
+  "waist_cm": 80,
+  "hips_cm": 100,
+  "recommended_size": "M",
+  "body_type": "Balanced / Rectangle",
+  "occasions": ["Work", "Evening", "Weekend", "Event"]
+}
+          </pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-shell">
+      <div class="footer-left">
+        <span class="footer-brand">FitAI</span>
+        <span class="footer-meta">Demo experience · Not medical or tailoring advice</span>
+      </div>
+      <div class="footer-right">
+        <a href="#how-it-works">Product</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#api">Commercial</a>
+      </div>
     </div>
+  </footer>
 
-    <script src="js/app.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
+
