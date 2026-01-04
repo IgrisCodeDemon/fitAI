@@ -67,7 +67,7 @@ class FitAI {
     const reader = new FileReader();
     reader.onload = () => {
       uploadArea.innerHTML = `
-        <div style="font-size:0.8rem; margin-bottom:6px; color:#5a675d;">Selected photo</div>
+        <div style="font-size:0.8rem; margin-bottom:6px; color:#d0e5ff;">Selected photo</div>
         <img src="${reader.result}" alt="Uploaded person" style="max-width:100%;max-height:260px;border-radius:12px;display:block;margin:0 auto 8px;" />
         <button class="btn btn-ghost" type="button" id="changePhotoBtn">Change photo</button>
       `;
@@ -79,8 +79,8 @@ class FitAI {
   showSamplePreview() {
     const uploadArea = document.getElementById('uploadArea');
     uploadArea.innerHTML = `
-      <div style="font-size:0.8rem; margin-bottom:6px; color:#5a675d;">Sample model</div>
-      <div style="border-radius:12px;background:linear-gradient(135deg,#bdd2b6,#798777);height:220px;display:flex;align-items:center;justify-content:center;color:#f8ede3;font-size:0.9rem;">
+      <div style="font-size:0.8rem; margin-bottom:6px; color:#d0e5ff;">Sample synthetic body</div>
+      <div style="border-radius:12px;background:linear-gradient(135deg,#4988c4,#0f2854);height:220px;display:flex;align-items:center;justify-content:center;color:#f5fbff;font-size:0.9rem;">
         Sample silhouette illustration
       </div>
       <button class="btn btn-ghost" type="button" id="changePhotoBtn">Upload your own</button>
@@ -98,8 +98,8 @@ class FitAI {
       <div class="upload-icon">📸</div>
       <h4>Drag & drop or click to upload</h4>
       <p class="upload-help">
-        Stand straight, full body visible, neutral background. For this demo you
-        can use any portrait‑style image.
+        Full‑body visible, front view, neutral background recommended. Any portrait
+        image works for testing.
       </p>
       <input type="file" id="fileInput" accept="image/*" />
     `;
@@ -117,10 +117,10 @@ class FitAI {
     const loading = document.getElementById('loading');
     const analyzeBtn = document.getElementById('analyzeBtn');
 
-    loading.style.display = 'block';
+    loading.style.display = 'flex';
     analyzeBtn.disabled = true;
 
-    await new Promise((resolve) => setTimeout(resolve, 2200));
+    await new Promise((resolve) => setTimeout(resolve, 2300));
 
     this.scanCount++;
     this.updateScanCounter();
@@ -138,13 +138,15 @@ class FitAI {
   generateResults() {
     const m = this.generateMockMeasurements();
     const bodyType = this.inferBodyType(m);
-    const size = this.estimateSize(m);
+    const sizeTop = this.estimateTopSize(m);
+    const sizeBottom = this.estimateBottomSize(m);
+    const fitPref = m.fitPreference;
 
     const summary = document.getElementById('measurementSummary');
     summary.innerHTML = `
-      <strong>Fit profile:</strong> ${bodyType} · Recommended size: ${size}
+      <strong>Fit profile:</strong> ${bodyType} · Top: ${sizeTop}, Bottom: ${sizeBottom}
       <div class="measurement-note">
-        These values are for demonstration only and do not replace professional tailoring.
+        Demo values only. Real deployment should calibrate against your brand charts and test sets.
       </div>
     `;
 
@@ -152,14 +154,14 @@ class FitAI {
     grid.innerHTML = '';
     const entries = [
       ['Height', `${m.height} cm`],
+      ['Shoulders', `${m.shoulder} cm`],
       ['Chest', `${m.chest} cm`],
       ['Waist', `${m.waist} cm`],
       ['Hips', `${m.hips} cm`],
       ['Inseam', `${m.inseam} cm`],
-      ['Top size', size],
-      ['Bottom size', size],
-      ['Fit preference', m.fit],
-      ['Formality mix', m.formality]
+      ['Top size', sizeTop],
+      ['Bottom size', sizeBottom],
+      ['Fit preference', fitPref]
     ];
 
     entries.forEach(([label, value]) => {
@@ -172,44 +174,67 @@ class FitAI {
       grid.appendChild(el);
     });
 
-    this.outfits = this.generateMockOutfits(bodyType, size);
+    this.outfits = this.generateMockOutfits(bodyType, sizeTop, sizeBottom, fitPref);
     this.renderOutfits();
   }
 
+  // More structured mock ranges
   generateMockMeasurements() {
-    const height = 165 + Math.floor(Math.random() * 18);
-    const chest = 86 + Math.floor(Math.random() * 18);
-    const waist = 70 + Math.floor(Math.random() * 16);
-    const hips = 90 + Math.floor(Math.random() * 16);
-    const inseam = 74 + Math.floor(Math.random() * 8);
-    const fit = Math.random() > 0.5 ? 'Tailored' : 'Relaxed';
-    const formality = Math.random() > 0.5 ? 'Smart casual' : 'Mixed';
+    // Heights biased around 170–178
+    const baseHeight = 166 + Math.round(this.gaussianRandom() * 6); // approx 158–184
+    const chest = 88 + Math.round(this.gaussianRandom() * 6);      // 80–104
+    const waist = chest - (6 + Math.round(Math.random() * 6));     // slightly smaller than chest
+    const hips = waist + (6 + Math.round(Math.random() * 8));      // usually > waist
+    const shoulder = 40 + Math.round(this.gaussianRandom() * 3);   // 36–48
+    const inseam = Math.round(baseHeight * 0.45 + (Math.random() * 4 - 2));
 
-    return { height, chest, waist, hips, inseam, fit, formality };
+    const fitPreference = Math.random() > 0.5 ? 'Tailored' : 'Relaxed';
+
+    return { height: baseHeight, chest, waist, hips, shoulder, inseam, fitPreference };
+  }
+
+  // Gaussian helper (Box–Muller, clipped)
+  gaussianRandom() {
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random();
+    while (v === 0) v = Math.random();
+    const num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    const normalized = num / 2.5;
+    return Math.max(-3, Math.min(3, normalized));
   }
 
   inferBodyType(m) {
     const hipWaist = m.hips - m.waist;
     const chestHip = m.chest - m.hips;
 
-    if (hipWaist > 14) return 'Curvy / Pear';
+    if (hipWaist > 16) return 'Curvy / Pear';
     if (Math.abs(chestHip) <= 4) return 'Balanced / Rectangle';
-    if (chestHip > 6) return 'Inverted Triangle';
+    if (chestHip > 8) return 'Inverted Triangle';
     return 'Classic / Regular';
   }
 
-  estimateSize(m) {
-    const avg = (m.chest + m.waist + m.hips) / 3;
-    if (avg < 82) return 'XS';
-    if (avg < 90) return 'S';
-    if (avg < 98) return 'M';
-    if (avg < 106) return 'L';
+  estimateTopSize(m) {
+    const metric = (m.chest + m.shoulder) / 2;
+    if (metric < 86) return 'XS';
+    if (metric < 92) return 'S';
+    if (metric < 100) return 'M';
+    if (metric < 108) return 'L';
     return 'XL';
   }
 
-  generateMockOutfits(bodyType, size) {
+  estimateBottomSize(m) {
+    const metric = (m.waist + m.hips) / 2;
+    if (metric < 84) return 'XS';
+    if (metric < 92) return 'S';
+    if (metric < 100) return 'M';
+    if (metric < 108) return 'L';
+    return 'XL';
+  }
+
+  generateMockOutfits(bodyType, topSize, bottomSize, fitPref) {
     const isCurvy = bodyType.includes('Curvy') || bodyType.includes('Pear');
     const isInverted = bodyType.includes('Inverted');
+    const isRelaxed = fitPref === 'Relaxed';
 
     return [
       {
@@ -217,60 +242,62 @@ class FitAI {
         bucket: 'Work',
         occasion: 'Work',
         formality: 'Formal',
-        title: `Sharp office tailoring (${size})`,
-        meta: 'Structured blazer, tapered trousers, minimal shirt.',
+        title: `Structured office look (Top ${topSize}, Bottom ${bottomSize})`,
+        meta: 'Lightweight blazer, tapered trousers, and a clean shirt for everyday office use.',
         good: isCurvy
-          ? 'High‑waist trousers with a softly nipped‑in blazer to highlight your waistline.'
+          ? 'High‑rise trousers and a slightly cinched blazer to keep shoulders and hips balanced.'
           : 'Straight‑leg trousers and lightly structured shoulders for clean vertical lines.',
         avoid: isInverted
-          ? 'Heavy shoulder padding that exaggerates upper width.'
-          : 'Oversized suits that remove shape completely.'
+          ? 'Strong shoulder padding and narrow trousers that exaggerate upper width.'
+          : 'Very oversized suits that hide your natural proportions.'
       },
       {
         id: 'work-smart',
         bucket: 'Work',
         occasion: 'Work',
         formality: 'Smart casual',
-        title: `Hybrid workday look (${size})`,
-        meta: 'Knit polo or blouse with slim chinos or dark denim.',
-        good: 'Mid‑weight fabrics and mid‑rise bottoms that transition from desk to dinner.',
-        avoid: 'Ultra‑skinny bottoms in stiff fabric that limit movement.'
+        title: `Hybrid workday outfit (${fitPref} fit)`,
+        meta: 'Fine‑gauge knit or polo with slim chinos or dark denim and minimalist shoes.',
+        good: isRelaxed
+          ? 'Soft knits and slightly tapered trousers that move easily through the day.'
+          : 'Sharper lines in the top with a bit of ease in the legs for comfort.',
+        avoid: 'Ultra‑stiff fabrics that crease heavily when sitting at a desk.'
       },
       {
         id: 'evening',
         bucket: 'Evening',
         occasion: 'Evening',
         formality: 'Smart casual',
-        title: `Dinner & drinks (${size})`,
-        meta: 'Dark jeans, fluid shirt or draped top, refined footwear.',
+        title: `Dinner & drinks ensemble`,
+        meta: 'Dark jeans, draped shirt or blouse, and refined sneakers or loafers.',
         good: isCurvy
           ? 'Wrap or faux‑wrap tops that follow curves without clinging.'
-          : 'Fitted top with straight or slim bottoms for a sleek column effect.',
+          : 'Column silhouettes with a slightly shorter top to lengthen the legs.',
         avoid: isCurvy
-          ? 'Boxy cropped tops cutting across the widest part of the hips.'
-          : 'Very low‑rise bottoms that visually shorten the legs.'
+          ? 'Boxy cropped tops that end at the widest part of your hips.'
+          : 'Very low‑rise bottoms that visually shorten your frame.'
       },
       {
         id: 'weekend',
         bucket: 'Weekend',
         occasion: 'Weekend',
         formality: 'Casual',
-        title: `Weekend off‑duty (${size})`,
-        meta: 'Relaxed tee, soft joggers or straight‑fit denim, clean sneakers.',
-        good: 'Breathable knits and mid‑rise waistbands for all‑day ease.',
-        avoid: 'Overly tight tops with ultra‑fitted leggings in thick fabric.'
+        title: `Off‑duty weekend set`,
+        meta: 'Soft tee or sweatshirt with joggers or straight‑fit denim and easy sneakers.',
+        good: 'Mid‑weight fabrics and mid‑rise waists that stay comfortable for long hours.',
+        avoid: 'Overly tight tops paired with ultra‑compression leggings in thick fabric.'
       },
       {
         id: 'event',
         bucket: 'Event',
         occasion: 'Event',
         formality: 'Dressy',
-        title: `Events & celebrations (${size})`,
-        meta: 'Midi dress or tailored co‑ord in elevated fabric.',
+        title: `Events & celebrations outfit`,
+        meta: 'Midi dress or tailored co‑ord in an elevated fabric with clean lines.',
         good: isCurvy
-          ? 'A‑line or wrap silhouettes that follow your shape and balance proportions.'
-          : 'Softly structured column shapes with subtle waist definition.',
-        avoid: 'Very shiny, clingy fabrics that highlight every contour under harsh lighting.'
+          ? 'A‑line or wrap shapes that follow your curves and balance proportions.'
+          : 'Softly structured column silhouettes with subtle waist definition.',
+        avoid: 'High‑shine, clingy fabrics that highlight every contour under bright light.'
       }
     ];
   }
@@ -287,7 +314,8 @@ class FitAI {
           );
 
     if (!filtered.length) {
-      grid.innerHTML = '<p style="font-size:0.86rem;color:#5a675d;">Run a scan to see outfits tailored to your profile.</p>';
+      grid.innerHTML =
+        '<p class="placeholder-text">Run a scan to see outfits tailored to your profile.</p>';
       return;
     }
 
@@ -312,3 +340,4 @@ class FitAI {
 window.addEventListener('DOMContentLoaded', () => {
   new FitAI();
 });
+
